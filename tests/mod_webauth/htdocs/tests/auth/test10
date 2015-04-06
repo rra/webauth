@@ -1,0 +1,46 @@
+#!/usr/bin/perl
+#
+# Written by Roland Schemers
+# Copyright 2003, 2013
+#     The Board of Trustees of the Leland Stanford Junior University
+#
+# See LICENSE for licensing terms.
+
+use strict;
+use warnings;
+
+use WebAuth::Tests qw(build_page last_used_test);
+
+# Check for any previous visit set in the query.
+my $wtl    = $ENV{WEBAUTH_TOKEN_LASTUSED};
+my ($prev) = ($ENV{QUERY_STRING} =~ /prev=(\d+)/);
+
+# Text for the page.
+my @extended = (
+    "This test is to make sure WEBAUTH_TOKEN_LASTUSED is getting updated, "
+    . "and that inactive timeouts are working.");
+
+# If we came here from a previous page, print out info from it.
+if ($prev) {
+    my $ps = scalar(localtime($prev));
+    push (@extended,
+          "The previous value of WEBAUTH_TOKEN_LASTUSED was $ps ($prev).");
+}
+
+push (@extended,
+      "Click <a href=\"/tests/auth/test10?prev=$wtl\">here</a> to re-run the "
+      .'test. If you wait for less then 20 seconds, you\'ll get taken back '
+      .'to this page. If you wait for more then 20 seconds, you should end '
+      .'up back at the webkdc login page.');
+
+# Set information for the tests.
+my %settings = (
+    test_number   => 10,
+    test_desc     => 'testing inactive-expire',
+    extended_desc => \@extended,
+    extra_title   => 'Performing Last Used tests',
+    extra_tests   => last_used_test(),
+);
+
+print "Content-type: text/html\n\n";
+print build_page(\%settings);

@@ -1,0 +1,46 @@
+#!/usr/bin/perl
+#
+# Written by Roland Schemers
+# Copyright 2003, 2013
+#     The Board of Trustees of the Leland Stanford Junior University
+#
+# See LICENSE for licensing terms.
+
+use strict;
+use warnings;
+
+use WebAuth::Tests qw(build_page last_used_test);
+
+# Find any previous visit time set in query, from earlier access.
+my $wtl    = $ENV{WEBAUTH_TOKEN_LASTUSED};
+my ($prev) = ($ENV{QUERY_STRING} =~ /prev=(\d+)/);
+my $cs     = scalar(localtime($wtl));
+
+# Text for the page.
+my @extended = (
+    'This test is to make sure WEBAUTH_TOKEN_LASTUSED is getting updated.',
+);
+
+# Set any last value, if we came here with it.
+my $value = "The current value of WEBAUTH_TOKEN_LASTUSED is $cs ($wtl).";
+if ($prev) {
+    my $ps = scalar(localtime($prev));
+    $value .= "<br>The previous value of WEBAUTH_TOKEN_LASTUSED was $ps "
+        ."($prev).";
+}
+push (@extended, $value);
+push (@extended,
+      "Click <a href=\"/tests/auth/test9?prev=$wtl\">here</a> to re-run "
+      ."the test when you have waited 10 seconds.");
+
+# Set information for the tests.
+my %settings = (
+    test_number   => 9,
+    test_desc     => 'testing last-used-update',
+    extended_desc => \@extended,
+    extra_title   => 'Performing LASTUSED test',
+    extra_tests   => last_used_test(),
+);
+
+print "Content-type: text/html\n\n";
+print build_page(\%settings);

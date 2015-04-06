@@ -1,0 +1,38 @@
+#!/usr/bin/perl
+#
+# Written by Roland Schemers
+# Copyright 2003, 2013
+#     The Board of Trustees of the Leland Stanford Junior University
+#
+# See LICENSE for licensing terms.
+
+use strict;
+use warnings;
+
+use WebAuth::Tests qw(build_page app_lifetime_test);
+
+# Text for the page.
+my @extended;
+push (@extended,
+      'This test sets the app-token lifetime to 5 seconds. To complete the '
+      .'test, you should run it again after waiting about 10-15 seconds. '
+      .'You should get sent back to the webkdc, but not prompted for your '
+      .'username/password, then sent back here again.');
+push (@extended,
+      'Click <a href="/tests/auth/test7">here</a> to re-run the test when '
+      .'you have waited 10 seconds.');
+push (@extended,
+      'Click <a href="/tests/index.html">here</a> to return to the tests');
+
+# Set information for the tests.
+my %settings = (
+    test_number   => 7,
+    test_desc     => 'testing 5 second app-token lifetime',
+    extended_desc => \@extended,
+    extra_title   => 'Performing Token Expiration test',
+    extra_tests   => app_lifetime_test(),
+
+);
+
+print "Content-type: text/html\n\n";
+print build_page(\%settings);

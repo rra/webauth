@@ -1,0 +1,30 @@
+#!/usr/bin/perl
+#
+# Written by Jon Robertson
+# Copyright 2011, 2013
+#     The Board of Trustees of the Leland Stanford Junior University
+#
+# See LICENSE for licensing terms.
+
+use strict;
+use warnings;
+
+use WebAuth::Tests qw(build_page);
+
+# Text for the page.
+my @extended = (
+    'This test is to make sure that two requirements work together properly. '
+    .'In this case, we test requiring both password and multifactor in the '
+    .'initial login.',
+);
+
+# Set information for the tests.
+my %settings = (
+    test_number   => 3,
+    test_desc     => 'Require both password and multifactor',
+    extended_desc => \@extended,
+    multifactor   => 1,
+);
+
+print "Content-type: text/html\n\n";
+print build_page(\%settings);
