@@ -1,7 +1,7 @@
 webauth (4.7.0-3) unstable; urgency=medium
 
   * Explicitly Build-Depend on libmodule-build-perl, since it will be
-    removed from Perl core in the next release.  (Closes: #7961560)
+    removed from Perl core in the next release.  (Closes: #796156)
   * Mention WebKDC in the description of libwebkc-perl in case someone is
     searching for packages containing that module.
   * Add overrides for apache2-module-depends-on-real-apache2-package,
