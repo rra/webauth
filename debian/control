@@ -170,9 +170,9 @@ Description: Perl libraries for WebAuth central login server
  user authentication for a domain and creates user authentication
  credentials for any web server that needs strong authentication.
  .
- This package contains the Perl modules that support the WebLogin server,
- which handles user authentication and the establishment of initial
- authentication credentials.
+ This package contains the WebKDC Perl modules that support the WebLogin
+ server, which handles user authentication and the establishment of
+ initial authentication credentials.
 
 Package: webauth-tests
 Architecture: all
