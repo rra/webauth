@@ -1,0 +1,6 @@
+# -*- conf -*-
+
+# Dependency added by dh_apache2, so this is either a bug in lintian or a
+# bug in dh_apache2, and either way, not actionable by the package
+# maintainer.
+libapache2-mod-webauthldap: apache2-module-depends-on-real-apache2-package apache2-bin

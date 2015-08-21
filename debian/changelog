@@ -4,8 +4,10 @@ webauth (4.7.0-3) unstable; urgency=medium
     removed from Perl core in the next release.  (Closes: #7961560)
   * Mention WebKDC in the description of libwebkc-perl in case someone is
     searching for packages containing that module.
+  * Add overrides for apache2-module-depends-on-real-apache2-package,
+    which appears to be a bug in either lintian or dh_apache2.
 
- -- Russ Allbery <rra@debian.org>  Thu, 20 Aug 2015 19:04:39 -0700
+ -- Russ Allbery <rra@debian.org>  Thu, 20 Aug 2015 19:24:05 -0700
 
 webauth (4.7.0-2) unstable; urgency=medium
 
