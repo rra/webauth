@@ -1,3 +1,10 @@
+webauth (4.7.0-3) unstable; urgency=medium
+
+  * Explicitly Build-Depend on libmodule-build-perl, since it will be
+    removed from Perl core in the next release.  (Closes: #7961560)
+
+ -- Russ Allbery <rra@debian.org>  Thu, 20 Aug 2015 19:04:39 -0700
+
 webauth (4.7.0-2) unstable; urgency=medium
 
   * Upload to unstable.

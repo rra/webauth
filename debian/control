@@ -3,18 +3,18 @@ Section: web
 Priority: optional
 Maintainer: Russ Allbery <rra@debian.org>
 Build-Depends: debhelper (>= 9), apache2-dev (>> 2.4.4-3~), dh-apache2,
- dh-autoreconf, libapr1-dev, libaprutil1-dev, libcgi-application-perl,
- libcgi-application-plugin-autorunmode-perl,
+ dh-autoreconf, libapr1-dev, libaprutil1-dev, libauthen-oath-perl,
+ libcgi-application-perl, libcgi-application-plugin-autorunmode-perl,
  libcgi-application-plugin-forward-perl,
  libcgi-application-plugin-tt-perl, libcgi-fast-perl,
- libcurl4-openssl-dev, libipc-run-perl, libkrb5-dev, libldap2-dev,
+ libcrypt-generatepassword-perl, libcurl4-openssl-dev, libfreezethaw-perl,
+ libgetopt-long-descriptive-perl, libipc-run-perl,
+ libjansson-dev (>= 2.6), libjson-perl, libkrb5-dev, libldap2-dev,
+ libmime-base32-perl, libmodule-build-perl, libnet-remctl-perl,
  libremctl-dev (>= 3.1), libssl-dev, libtemplate-perl,
  libtest-minimumversion-perl, libtest-pod-perl, libtest-strict-perl,
- libtime-duration-perl, libtimedate-perl, liburi-perl, libwww-perl,
- libxml-parser-perl, libjansson-dev (>= 2.6), pkg-config, 
- libfreezethaw-perl, libauthen-oath-perl, libcrypt-generatepassword-perl, 
- libgetopt-long-descriptive-perl, libjson-perl, libmime-base32-perl, 
- libnet-remctl-perl, libwww-mechanize-perl, perl
+ libtime-duration-perl, libtimedate-perl, liburi-perl,
+ libwww-mechanize-perl, libwww-perl, libxml-parser-perl, perl, pkg-config
 Standards-Version: 3.9.6
 Homepage: http://webauth.stanford.edu/
 Vcs-Git: git://git.eyrie.org/kerberos/webauth.git -b debian
