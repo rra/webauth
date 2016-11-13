@@ -6,6 +6,7 @@ webauth (4.7.0-4) UNRELEASED; urgency=medium
     to be correct about this.
   * Change Vcs-Git and Vcs-Browser to https URLs.
   * Fix duplicate words in the documentation caught by Lintian.
+  * Run wrap-and-sort -ast.
 
  -- Russ Allbery <rra@debian.org>  Sun, 13 Nov 2016 10:14:55 -0800
 
