@@ -28,7 +28,7 @@ Build-Depends:
  libmodule-build-perl,
  libnet-remctl-perl,
  libremctl-dev (>= 3.1),
- libssl-dev,
+ libssl1.0-dev,
  libtemplate-perl,
  libtest-minimumversion-perl,
  libtest-pod-perl,

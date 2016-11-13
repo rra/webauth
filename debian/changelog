@@ -2,6 +2,8 @@ webauth (4.7.0-4) UNRELEASED; urgency=medium
 
   * Add a patch to change the function used to probe for the OpenSSL
     library, allowing WebAuth to build against OpenSSL 1.1.
+  * Depend on libssl1.0-dev anyway, since Apache currently requires
+    libssl1.0-dev and otherwise build dependencies are not installable.
   * Mark libwebauth-perl Multi-Arch: same, trusting the multiarch hinter
     to be correct about this.
   * Change Vcs-Git and Vcs-Browser to https URLs.
