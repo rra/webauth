@@ -2,6 +2,8 @@ webauth (4.7.0-4) UNRELEASED; urgency=medium
 
   * Add a patch to change the function used to probe for the OpenSSL
     library, allowing WebAuth to build against OpenSSL 1.1.
+  * Mark libwebauth-perl Multi-Arch: same, trusting the multiarch hinter
+    to be correct about this.
 
  -- Russ Allbery <rra@debian.org>  Sun, 13 Nov 2016 10:14:55 -0800
 

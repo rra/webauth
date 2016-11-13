@@ -109,6 +109,7 @@ Description: Transitional package for WebAuth authentication KDC
 Package: libwebauth-perl
 Section: perl
 Architecture: any
+Multi-Arch: same
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${perl:Depends}
 Breaks: libwebkdc-perl (<< 4.5.0)
 Description: Perl library for WebAuth authentication
