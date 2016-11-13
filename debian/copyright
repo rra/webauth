@@ -114,7 +114,7 @@ Files: portable/apache.h portable/apr.h portable/asprintf.c
  weblogin/templates/error.tmpl weblogin/templates/help.html
  weblogin/templates/login.tmpl weblogin/templates/logout.tmpl
  weblogin/templates/multifactor.tmpl weblogin/templates/pwchange.tmpl
-Copyright: no copyright notice, see License
+Copyright: no copyright notice, see License notice
 License: rra-public-domain
  The authors hereby relinquish any claim to any copyright that they may
  have in this work, whether granted under contract or by operation of law
