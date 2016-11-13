@@ -4,6 +4,7 @@ webauth (4.7.0-4) UNRELEASED; urgency=medium
     library, allowing WebAuth to build against OpenSSL 1.1.
   * Mark libwebauth-perl Multi-Arch: same, trusting the multiarch hinter
     to be correct about this.
+  * Fix duplicate words in the documentation caught by Lintian.
 
  -- Russ Allbery <rra@debian.org>  Sun, 13 Nov 2016 10:14:55 -0800
 

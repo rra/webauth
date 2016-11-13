@@ -33,7 +33,7 @@ Installing the Weblogin Server
 The Weblogin server is implemented as Perl CGI scripts.  In order to
 finish the installation, you need to add Apache configuration directives
 to send the login and logout URLs to these CGI scripts and to allow the
-images and help page they refer to to be found.
+images and help page they use to be found.
 
 Add the following configuration to a virtual host in:
 
@@ -168,4 +168,4 @@ Once you have configured Apache to support FastCGI, add, to the
 After you restart Apache with apache2ctl graceful, the Weblogin scripts
 should run under FastCGI.
 
- -- Russ Allbery <rra@debian.org>, Fri, 13 Jul 2012 17:14:10 -0700
+ -- Russ Allbery <rra@debian.org>, Sun, 13 Nov 2016 10:24:21 -0800
