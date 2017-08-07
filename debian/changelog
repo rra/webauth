@@ -1,4 +1,4 @@
-webauth (4.7.0-5) unstable; urgency=medium
+webauth (4.7.0-5) experimental; urgency=medium
 
   * Upload to experimental, since that's where Apache for OpenSSL 1.1 is
     being staged.
@@ -8,7 +8,7 @@ webauth (4.7.0-5) unstable; urgency=medium
   * Update standards version to 4.0.1.
     - Change all extra priorities to optional.
 
- -- Russ Allbery <rra@debian.org>  Mon, 07 Aug 2017 07:35:05 -0700
+ -- Russ Allbery <rra@debian.org>  Mon, 07 Aug 2017 07:54:47 -0700
 
 webauth (4.7.0-4) unstable; urgency=medium
 
