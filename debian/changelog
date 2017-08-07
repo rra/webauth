@@ -1,0 +1,1171 @@
+webauth (4.7.0-5) unstable; urgency=medium
+
+  * Update build dependency to libssl-dev (OpenSSL 1.1).  (Closes: #859788)
+  * Remove old transitional packages for the Apache module renaming.
+  * Update standards version to 4.0.1.
+    - Change all extra priorities to optional.
+
+ -- Russ Allbery <rra@debian.org>  Mon, 07 Aug 2017 07:54:47 -0700
+
+webauth (4.7.0-4) unstable; urgency=medium
+
+  * Add a patch to change the function used to probe for the OpenSSL
+    library, allowing WebAuth to build against OpenSSL 1.1.
+  * Depend on libssl1.0-dev anyway, since Apache currently requires
+    libssl1.0-dev and otherwise build dependencies are not installable.
+    (Closes: #828597)
+  * Mark libwebauth-perl Multi-Arch: same, trusting the multiarch hinter
+    to be correct about this.
+  * Change Vcs-Git and Vcs-Browser to https URLs.
+  * Fix duplicate words in the documentation caught by Lintian.
+  * Run wrap-and-sort -ast.
+  * Update standards version to 3.9.8 (no changes required).
+
+ -- Russ Allbery <rra@debian.org>  Sun, 13 Nov 2016 10:43:31 -0800
+
+webauth (4.7.0-3) unstable; urgency=medium
+
+  * Explicitly Build-Depend on libmodule-build-perl, since it will be
+    removed from Perl core in the next release.  (Closes: #796156)
+  * Mention WebKDC in the description of libwebkc-perl in case someone is
+    searching for packages containing that module.
+  * Add overrides for apache2-module-depends-on-real-apache2-package,
+    which appears to be a bug in either lintian or dh_apache2.
+
+ -- Russ Allbery <rra@debian.org>  Thu, 20 Aug 2015 19:24:05 -0700
+
+webauth (4.7.0-2) unstable; urgency=medium
+
+  * Upload to unstable.
+  * Moved libtime-duration-perl to Depends from Suggests.  This is now
+    used unconditionally upstream.  (Closes: #783288)
+  * Add debian/gbp.conf reflecting the branch layout of the default
+    packaging repository.
+  * Fix upstream distribution signing key.
+
+ -- Russ Allbery <rra@debian.org>  Sun, 26 Apr 2015 18:53:16 -0700
+
+webauth (4.7.0-1) experimental; urgency=medium
+
+  [ Russ Allbery ]
+  * Upload to experimental due to release freeze.
+  * Rename libwebauth11 to libwebauth12 for upstream SONAME change.
+  * Update standards version to 3.9.6.
+
+  [ Jon C. Robertson ]
+  * New upstream release.
+    - Recognize KRB5_BAD_ENCTYPE, KRB5_GET_IN_TKT_LOOP,
+      KRB5_PREAUTH_FAILED, and KRB5KRB_AP_ERR_MODIFIED as additional
+      synonyms for a failed login error code.  Various combinations of
+      recent MIT and Heimdal with different KDCs return these error
+      codes if the password is incorrect.
+    - Added new fields to the userinfo service parsing and the WebLogin
+      handling.  These allow for a more complicated multifactor
+      configuration to be passed along from the user information
+      service, with multiple possible multifactor devices and one
+      default.
+    - Give a validation remctl command its own timeout error, so that a
+      failure to respond to validation is handled differently than any
+      other timeout failure.  This is done so that we can handle
+      out-of-band multifactor methods, such as a phone call.  Previously
+      that would show up in WebLogin as a generic
+      WK_ERR_UNRECOVERABLE_ERROR.
+    - Ability to use JSON rather than XML for the user information
+      service's return values.  This is activated with the
+      WebKdcUserInfoJSON configuration directive.
+    - Refactored the userinfo code to separate remctl support, XML
+      parsing, and JSON parsing into separate source files for
+      readability.
+  * Added build-depends for libjansson-dev (>= 2.6), pkg-config,
+    libfreezethaw-perl, libauthen-oath-perl,
+    libcrypt-generatepassword-perl, libgetopt-long-descriptive-perl,
+    libjson-perl, libmime-base32-perl, libnet-remctl-perl, and
+    libwww-mechanize-perl.
+
+ -- Russ Allbery <rra@debian.org>  Sun, 05 Apr 2015 17:17:38 -0700
+
+webauth (4.6.1-1) unstable; urgency=medium
+
+  * New upstream release.
+    - Fix legacy support for AuthType StanfordAuth.
+    - New mod_webkdc configuration directive, WebKdcFastArmorCache, that
+      tells the WebKDC to always use FAST armor when obtaining initial
+      credentials using a password.
+    - Fix parsing of the WebKdcKerberosFactors directive.
+    - New webauth_krb5_set_fast_armor_path API.
+    - Show expiring password warning in WebLogin after any POST.
+    - Translate KRB5_KDC_UNREACH into a user rejected error instead of an
+      internal failure.
+    - Translate an EINVAL error to an incorrect password error code.
+    - Verify the username field on multifactor authentication to avoid
+      warnings from later in the code.
+    - Allow newlines, CRs, and tabs in XML from the WebKDC to the WebLogin
+      server, fixing display of some user message elements.
+    - Force display of the confirmation page if authorization identity
+      switching is permitted.
+    - Diagnose empty RT and ST parameters to WebLogin.
+    - Add new factors mp (mobile push) and v (voice).
+    - Warn in the mod_webauth documentation that all members of a
+      load-balanced pool accepting credential delegation must use the same
+      Kerberos identity.
+  * Enable tests controlled with AUTOMATED_TESTING.
+  * Rename packages and change library symbols for upstream SONAME bump
+    and symbol versioning changes.
+
+ -- Russ Allbery <rra@debian.org>  Wed, 23 Jul 2014 14:28:06 -0700
+
+webauth (4.6.0-4) unstable; urgency=medium
+
+  * Use an executable debian/libwebauth-perl.install file and some Perl
+    code in debian/rules to pull the correct Perl arch-specific vendor
+    module path from Perl during the build.  Should fix builds with Perl
+    5.20.  Thanks, Niko Tyni and gregor herrmann.  (Closes: #752903)
+
+ -- Russ Allbery <rra@debian.org>  Wed, 02 Jul 2014 21:54:21 -0700
+
+webauth (4.6.0-3) unstable; urgency=medium
+
+  * Handle ownership change of the mod_webauth keyring in the
+    libapache2-webauth transition package as well, since that's the
+    package that will see the versioned upgrade.
+  * Tighten dependency of libwebkdc-perl on libwebauth-perl to ensure that
+    the remctl password change API is available.
+  * Refresh debian/copyright with current upstream LICENSE file.
+  * Remove now-unneeded Lintian override for the upstream signing key.
+  * Add a Lintian override for the dual-licensed protocol specification.
+
+ -- Russ Allbery <rra@debian.org>  Sun, 13 Apr 2014 13:46:27 -0700
+
+webauth (4.6.0-2) unstable; urgency=medium
+
+  * Change ownership of the mod_webauth keyring to www-data on upgrade
+    from prior versions if it was owned by root.  Versions prior to 4.6.0
+    created the keyring during Apache configuration parsing before Apache
+    dropped privileges, but keyring handling is now done by the Apache
+    child processes.  Without this change, WebAuth actions would fail
+    because the keyring could not be initialized.
+
+ -- Russ Allbery <rra@debian.org>  Wed, 19 Mar 2014 13:50:40 -0700
+
+webauth (4.6.0-1) unstable; urgency=medium
+
+  * New upstream release.
+    - New mod_webauth configuration directive, WebAuthCookiePath, which
+      scopes all cookies set by mod_webauth within the directive scope to
+      the given path.  Be sure that any WebAuthDoLogout URL is scoped with
+      the same path.  When using this directive, ensure all protected
+      portions of the site are covered by a directive and none of the
+      scopes are overlapping.
+    - WebAuthOptional should now work properly with Apache 2.4.
+    - Do not delete mod_webauth notes after using them, which prevents
+      some double-redirects to WebLogin during subrequests.
+    - mod_webauth and mod_webkdc now maintain separate in-memory keyrings
+      for each virtual host, and WebAuthKeyring, WebKdcKeyring, and
+      related directives are now properly honored in virtual host
+      configuration.  This fixes keyring leaks between virtual hosts when
+      using the ITK MPM.
+    - Be more thorough in telling browsers to not cache WebLogin
+      responses, redirects and logout pages, and WebAuthDontCache pages.
+    - All keyring writes are now locked with a separate lock file (the
+      keyring file name with ".lock" appended) in the same directory.
+    - Keyring updates now preserve ownership and permissions where
+      possible.
+    - Use the authenticated identity returned by the WebKDC for
+      multifactor authentication in WebLogin rather than preserving the
+      user's original entry.  The WebKDC may have canonicalized.
+    - Support a remctl-based password change protocol in WebLogin and in
+      libwebauth via the new webauth_krb5_change_config API.
+    - Set the correct template variable when the code field is left blank
+      on the WebLogin multifactor form.
+    - Map unknown realm and invalid principal errors during Kerberos
+      authentication to WA_PEC_USER_REJECTED instead of a generic Kerberos
+      error so that WebLogin will present a more helpful error message.
+    - Fix a bug in the workaround for invalid XML from the WebKDC.
+    - Log a more detailed message during WebLogin password change
+      failures.
+  * Add the upstream signing key to debian/upstream/signing-key.asc and
+    configure uscan to do signature validation.  Configure uscan to
+    download the xz tarball instead of the gz tarball.
+  * Remove now-unnecessary override of dh_builddeb to use xz compression.
+  * Update standards version to 3.9.5 (no changes required).
+
+ -- Russ Allbery <rra@debian.org>  Tue, 18 Mar 2014 22:59:18 -0700
+
+webauth (4.5.5-2) unstable; urgency=low
+
+  * Upload to unstable.
+
+ -- Russ Allbery <rra@debian.org>  Sun, 08 Sep 2013 10:51:03 -0700
+
+webauth (4.5.5-1) experimental; urgency=low
+
+  * New upstream release.
+    - Warn about mismatched webkdc-proxy tokens but no longer treat them
+      as a fatal error.
+    - Fix handling of non-password session factor requirements.
+    - Improve handling of initial factor requirements when users have a
+      way to establish initial credentials that don't include a password
+      factor.
+    - Improve handling of a Kerberos webkdc-proxy token requirement during
+      a multifactor authentication.
+    - Retry WebLogin posts to the WebKDC once to be more robust against
+      interruptions by signals (such as from the FastCGI process manager).
+    - Produce more succinct and hopefully better error messages when
+      WebLogin cannot post to the WebKDC.
+    - Ignore SIGPIPE signals in WebLogin scripts.
+    - Require the return URL be absolute and not contain non-ASCII
+      characters in mod_webkdc processing.
+    - Fix WebLogin replay detection logic to not trigger on password
+      changes.
+    - Work around problems in WebLogin caused by the WebKDC returning
+      error messages that contain undeclared non-UTF-8 characters in
+      violation of the XML standard.
+    - Improve error reporting of unparsable XML received by the WebLogin
+      server from the WebKDC.
+    - Fix logging of mod_webkdc <requestTokenRequest> failures.
+    - Fix the prototype attributes for webauth_user_validate.
+    - Log when mod_webkdc ignores expired tokens.
+    - Display more correct errors after some failures during the second
+      step of a multifactor authentication.
+    - Correctly diagnose a missing service token in a WebLogin request and
+      report the correct error instead of an internal error.
+    - Make the version of all Perl modules match the WebAuth release.
+    - Better error display for logins rejected by the user information
+      service.
+    - Better error display for multifactor authentication errors.
+    - Rate limiting and replay detection are now also applied to the
+      multifactor login page.
+    - Fix replay detection by correcting choice of memcached keys.
+    - Support staying on the code entry page after an error when using an
+      SMS method for multifactor.  Local template changes are required to
+      take advantage of this feature.
+
+ -- Russ Allbery <rra@debian.org>  Wed, 28 Aug 2013 22:02:11 -0700
+
+webauth (4.5.3-5) unstable; urgency=low
+
+  * Only remove /var/lib/webauth during purge if the directory exists.
+    Both libapache2-mod-webauth and libapache2-mod-webauthldap create and
+    use that directory, so it may have already been removed by the other
+    package.  (Closes: #714602)
+
+ -- Russ Allbery <rra@debian.org>  Mon, 01 Jul 2013 15:21:48 -0700
+
+webauth (4.5.3-4) unstable; urgency=low
+
+  * Apply upstream patch to fix incorrect linkage of some of the test
+    programs.  (Closes: #713452)
+
+ -- Russ Allbery <rra@debian.org>  Sun, 23 Jun 2013 12:14:52 -0700
+
+webauth (4.5.3-3) unstable; urgency=low
+
+  * Move mod_webauthldap into a separate libapache2-mod-webauthldap
+    package.  This permits better dependencies, more closely conforms to
+    the Apache module naming convention, and allows users who aren't
+    interested in the LDAP module to easily remove it.  Note that the
+    libapache2-mod-webauth package does not attempt to clean up
+    configuration files left behind from the mod_webauthldap module, since
+    nearly all users upgrading from an older version will end up with both
+    packages installed, and removal of libapache2-mod-webauthldap will do
+    the right thing.  Additional cleanup would only be needed for people
+    upgrading from experimental versions of libapache2-mod-webauth who do
+    not install libapache2-mod-webauthldap and doesn't seem worth the
+    complexity.
+  * Add proper Breaks/Replaces for the Apache module package renaming.
+  * Pass LDFLAGS from the main build to the Perl module build so that the
+    hardening flags are set properly.
+
+ -- Russ Allbery <rra@debian.org>  Sun, 02 Jun 2013 12:12:40 -0700
+
+webauth (4.5.3-2) unstable; urgency=low
+
+  * Upload to unstable.
+  * Now that dh_apache2 has an option to not enable the modules by
+    default, let it handle all module setup for libapache2-mod-webauth
+    except for the Apache restart and remove the now-unnecessary prerm
+    script.
+  * Simplify libcgi-application-perl Depends and Build-Depends by dropping
+    the alternatives that were required for squeeze.
+  * Add build dependency on dh-apache2 per the dh_apache2 manual page.
+
+ -- Russ Allbery <rra@debian.org>  Thu, 30 May 2013 19:43:23 -0700
+
+webauth (4.5.3-1) experimental; urgency=low
+
+  * New upstream release.
+    - SECURITY: Clear header state between requests to avoid information
+      leaks or infinite redirects for WebLogin servers using FastCGI and
+      $REMUSER_REDIRECT (not the default).  The vulnerability was
+      introduced in WebAuth 4.4.1.  All versions of WebAuth with this
+      vulnerability were only uploaded to Debian experimental.
+      (CVE-2013-2106)
+
+ -- Russ Allbery <rra@debian.org>  Wed, 15 May 2013 13:57:37 -0700
+
+webauth (4.5.2-1) experimental; urgency=low
+
+  * New upstream release.
+    - WebLogin now supports preserving remember_login on authentication
+      failure.  Template changes are required.
+    - Fix clearing of failed authentication attempts on successful auth.
+    - Fix setting cookies on the WebLogin error page.
+    - Stop clearing single sign-on cookies on cookie test redirect.
+  * Recommend the GSS-API SASL module packages for mod_webauthldap and
+    document their need in README.Debian.
+  * Update the Debian-specific installation instructions to reference
+    conf-available and a2enconf instead of /etc/apache2/conf.d.
+
+ -- Russ Allbery <rra@debian.org>  Tue, 14 May 2013 19:15:35 -0700
+
+webauth (4.5.1-1) experimental; urgency=low
+
+  * New upstream release.
+    - Fix support for single sign-on in WebLogin, broken in 4.5.0.
+    - Document additional template changes required for remember_login.
+    - Preserve remember_login through a forced password change.
+    - Pass any user information service message to the confirm template.
+    - Avoid re-creating WebAuth cookies unnecessarily in WebLogin.
+    - Fix a few bugs in the installable mod_webauth test suite.
+  * Increase Breaks and minimum dependency versions between the WebLogin
+    components to 4.5.0.
+  * Remove a stray Debian revision in the libwebauth10 symbols file.
+
+ -- Russ Allbery <rra@debian.org>  Wed, 01 May 2013 15:31:24 -0700
+
+webauth (4.5.0-1) experimental; urgency=low
+
+  * New upstream release.
+    - WebLogin now supports indicating, on the login form template,
+      whether to create single sign-on cookies.  The default form sends a
+      parameter saying to do so, but the default behavior is to not create
+      the cookies.  This will require a template change for most WebLogin
+      deployments.
+    - Revert change in WebAuthForceLogin interpretation introduced in
+      WebAuth 4.4.0.  It once again requires authentication with a login
+      token.  Document that it will not work well with authorization
+      identities set after authentication.
+    - Fix password change handling in WebLogin, broken since 4.4.0.
+    - Fix reporting of password rejection reasons, broken since 4.3.0.
+    - mod_webauth and mod_webkdc now produce much better error logs.
+    - Initial multifactor no longer satisfies a requirement for random
+      session multifactor, correcting a long-standing bug.
+    - New WebAuthLdapOperationalAttribute directive for mod_webauthldap
+      that allows inclusion of operational attributes in the environment.
+    - WebLogin no longer supports obtaining the password expiration from a
+      kadmin-remctl backend via a direct remctl call.  Instead, it uses
+      the value from the WebKDC, which comes from the user information
+      service.
+    - The WebLogin confirmation page supports a new expire_timestamp
+      variable, which contains the password expiration in seconds since
+      UNIX epoch.  This should be used instead of the (deprecated)
+      expire_date variable since it isn't preformatted and can therefore
+      be localized.  See the sample confirm.tmpl template for how to
+      format the date for display.
+    - New support for persistent cookies containing additional factors,
+      controlled by the user information service.
+    - The WebKDC now passes the user's current factors to the user
+      information service as an additional parameter to the userinfo
+      call, which can be used to change behavior based on whether the user
+      has persistent factors set.
+    - The user information service can now return a specific set of
+      required factors instead of just indicating multifactor is required.
+    - The user information service can return a message for display in
+      the multifactor authentication page in WebLogin (and that has been
+      added to the default templates).
+    - The user information service can, in both the userinfo and validate
+      calls, return an opaque data structure to WebLogin, and WebLogin can
+      send an opaque data structre back in the validate call.  This allows
+      for multistep multifactor interactions outside of WebAuth's
+      knowledge, such as resynchronization of hardware tokens.
+    - The user information service can add factors to a user's successful
+      interactive authentication.
+    - WebLogin and the multifactor page template now receive a list of the
+      factors a user needs but doesn't yet have, instead of just a
+      complete list of the desired factors.
+    - WebLogin can now tell the WebKDC and, in turn, the user information
+      service what type of OTP authentication was used, if it knows.
+    - The user information service can indicate the expiration time of
+      factors resulting from an OTP authentication.
+    - Errors in contacting the user information service are now logged
+      even if the WebKDC is configured to ignore those errors.
+    - Multiple changes to the libwebauth API, most notably revisions to
+      the webkdc_login and userinfo APIs and a new opaque factors data
+      type.
+    - mod_webkdc no longer supports obtaining proxy tokens via a
+      <getTokenRequest> call.  This was never used and is conceptually
+      useless.
+    - undef arguments to Perl XS functions are now properly diagnosed.
+  * Fix some incorrect URLs in the webauth-tests package that were left
+    over from the test suite rewrite.
+  * Use an uppercase realm name in the token.acl example in README.Debian
+    for libapache2-mod-webkdc.  Nearly all Kerberos realms will be
+    uppercase and the realm is case-sensitive.  Thanks to Lisandro Damián
+    Nicanor Pérez Meyer for the report.  (Closes: #705557)
+
+ -- Russ Allbery <rra@debian.org>  Fri, 26 Apr 2013 15:21:08 -0700
+
+webauth (4.4.3-1) experimental; urgency=low
+
+  * New upstream release.
+    - Fix WebAuthTrustAuthzIdentity to not enable WebAuthDoLogout.
+    - Correctly handle an authorization identity equal to the
+      authentication identity rather than rejecting it with an error.
+    - Remove an arbitrary mod_webauthldap limit in the number of values
+      of a multivalued attribute will be exposed in the environment.
+    - Fix a syntax error in replay handling in the default WebLogin
+      template.
+    - Ignore empty app cookies in mod_webauth instead of logging an
+      error.  These are created internally by mod_webauth when the app
+      cookie has expired.
+    - Better mod_webauth logging when the user's app cookie has expired.
+    - Stop logging the binary app token in mod_webauth.
+    - Fix some obscure error handling cases caught by clang --analyze.
+  * Use the new -q flag to a2query when probing for whether mod_webauth
+    or mod_webauthldap are enabled, and depend on the appropriate version
+    of apache2.
+  * Let dh_apache2 handle configuration of libapache2-mod-webkdc now that
+    we can tell it to skip libapache2-mod-webauth, and build-depend on the
+    appropriate version of apache2-dev.
+
+ -- Russ Allbery <rra@debian.org>  Tue, 12 Mar 2013 19:13:45 -0700
+
+webauth (4.4.2-1) experimental; urgency=low
+
+  * New upstream release.
+    - Fix an occasional WebKDC crash when determining if an authentication
+      is interactive.  Should fix FTBFS on powerpc.
+    - Add additional Autoconf checks to hopefully build on Hurd.
+
+ -- Russ Allbery <rra@debian.org>  Tue, 05 Feb 2013 13:50:16 -0800
+
+webauth (4.4.1-1) experimental; urgency=low
+
+  * New upstream release.
+    - New authenticate callback supported in WebLogin configuration.
+    - WebLogin should now run more efficiently under FastCGI.
+
+ -- Russ Allbery <rra@debian.org>  Thu, 31 Jan 2013 19:18:00 -0800
+
+webauth (4.4.0-1) experimental; urgency=low
+
+  * New upstream release.
+    - New authorization identity support in all components of WebAuth.
+    - New WebKdcLoginTimeLimit directive for mod_webkdc to control the
+      time limit for multistage login and when a recent login no longer
+      counts towards session factors.
+    - WebAuthForceLogin no longer forces re-authentication if the last
+      authentication was within WebKdcLoginTimeLimit.
+    - WebLogin now optionally supports replay detection and rate limiting
+      of failed login attempts.  This support requires a memcached server
+      to store the relevant data.
+    - The WebLogin error template now takes two new parameters for errors
+      related to replays and rate limiting.
+    - Set single sign-on cookies in WebLogin if appropriate even when
+      displaying an error.  This fixes looping issues with site
+      restrictions done via the user innformation service.
+    - The WebLogin configuration options @REMUSER_LOCAL_REALMS and
+      @REMUSER_PERMITTED_REALMS replace @REMUSER_REALMS.  The latter is
+      supported for backward compatibility.
+    - Multiple fixes for encoding of Kerberos credentials.
+    - Fix mapping of WebKDC error codes to names in WebLogin.
+    - Document the WebAuthRequireSSL directive.
+    - webauth_token_{encrypt,decrypt} are now part of the public API.
+    - webauth_base64_*, webauth_hex_*, webauth_attr_*, and webauth_attrs_*
+      functions are no longer part of the public API.
+    - The webauth.h header has been removed.  Use the more specific
+      webauth/*.h headers.
+    - New public webauth_keyring_encode and webauth_keyring_decode
+      functions and corresponding Perl API to handle keyring serialization
+      without requiring that it be done to a file.
+    - The WA_TK_*, WA_TT_*, and WA_SA_* preprocessor constants are no
+      longer provided.  They weren't useful.
+    - The WA_ERR_KEYRING_* error codes have changed to WA_ERR_FILE_* and
+      new error code WA_ERR_FILE_NOT_FOUND has been added.
+  * Update standards version to 3.9.4.
+    - Update Vcs-Git to specify the Debian packaging branch.
+
+ -- Russ Allbery <rra@debian.org>  Wed, 19 Dec 2012 20:57:09 -0800
+
+webauth (4.3.3-1) experimental; urgency=low
+
+  * New upstream release.
+    - Fix memory initialization error in the WebKDC that could cause
+      incorrect handling of random multifactor verification.
+    - Fix memory allocation error in the WebAuth Perl module that could
+      cause memory corruption in the WebLogin server.
+  * Add Breaks of libwebkdc-perl and webauth-weblogin << 4.3.0 to
+    libwebauth-perl and of webauth-weblogin << 4.3.0 to libwebkdc-perl.
+    The API of the Perl modules changed in 4.3.0.  (Closes: #691878)
+  * Remove ~ on 4.3.0 dependencies.  There were no pre-release versions,
+    so this is just visual clutter.
+  * Drop Replaces and Breaks on libwebauth1-dev, not required since the
+    squeeze release.
+
+ -- Russ Allbery <rra@debian.org>  Mon, 05 Nov 2012 12:43:48 -0800
+
+webauth (4.3.2-1) experimental; urgency=low
+
+  * New upstream release.
+    - Fix memory pool allocation error in mod_webauth that could prevent
+      it from obtaining a service token from the WebKDC.
+
+ -- Russ Allbery <rra@debian.org>  Thu, 27 Sep 2012 19:43:24 -0700
+
+webauth (4.3.1-1) experimental; urgency=low
+
+  * New upstream release.
+    - WebAuthDoLogout is now allowed in .htaccess via AuthConfig.
+    - Fix an invalid free in webauth_webkdc_login.
+    - Fix incorrect Perl module includes in pwchange.fcgi.
+    - Add an overloaded cmp operator for WebAuth::Exception.
+  * Tighten the dependencies between the Perl modules and WebLogin.
+
+ -- Russ Allbery <rra@debian.org>  Wed, 08 Aug 2012 20:38:58 -0700
+
+webauth (4.3.0-1) experimental; urgency=low
+
+  * New upstream release.
+    - mod_webauth now sets HttpOnly on cookies by default.  There is a new
+      WebAuthHttpOnly flag to disable this behavior.
+    - WebLogin now sets HttpOnly on all cookies.
+    - Add new optional <userMessage> element to <requestTokenResponse>
+      from the WebKDC and a new error code to indicate that this HTML
+      error should be displayed to the user.
+    - Support an <error> return element from the user information
+      service and pass it as the <userMessage> element.
+    - Add WebLogin support via an err_html parameter to display the error
+      returned in the <userMessage> element from the WebKDC.
+    - Change all Kerberos functions in the WebAuth library API to take the
+      WebAuth context and use APR.  Remove some unused functions, merge
+      others, and rename others.  Update the Perl API to match.  Any Perl
+      programs that call WebAuth Kerberos functions will require updates.
+    - Fix decoding of Kerberos credentials with a second ticket.
+    - Kerberos realms are no longer escaped before matching them against
+      the Apache configuration.  This only affects handling of realm names
+      with unusual characters.
+  * Mark webauth-tests and webauth-weblogin as Multi-Arch: foreign.  This
+    is necessary even for arch: all packages.
+
+ -- Russ Allbery <rra@debian.org>  Mon, 06 Aug 2012 20:35:13 -0700
+
+webauth (4.2.2-1) experimental; urgency=low
+
+  * New upstream release.
+    - Fix WebKDC::WebRequest error in proxy cookie handling that broke
+      WebLogin functionality.
+    - Fix Kerberos context cleanup after saving delegated credentials.
+
+ -- Russ Allbery <rra@debian.org>  Thu, 19 Jul 2012 16:19:25 -0700
+
+webauth (4.2.1-1) experimental; urgency=low
+
+  * New upstream release.
+    - Fix keyring decoding from files on 64-bit systems.
+    - Fix uninitialized memory error in token-encode test case.
+
+ -- Russ Allbery <rra@debian.org>  Wed, 18 Jul 2012 16:41:50 -0700
+
+webauth (4.2.0-1) experimental; urgency=low
+
+  * New upstream release.
+    - Add support for Apache 2.4.  (Closes: #666861)
+    - Support for AuthType StanfordAuth has been deprecated, and the
+      corresponding mod_webauthldap support is not available when built
+      against Apache 2.4.
+    - Support use of Kerberos keyring caches for passing delegated
+      credentials from mod_webauth to CGI and embedded code.
+    - Fix merging of mod_webkdc Apache directives in corner cases.
+    - Hopefully fix some problems with orphaned WebLogin login.fcgi and
+      pwchange.fcgi scripts when running under FastCGI.
+    - Significant revisions of the WebAuth Perl module API.
+    - Allow id tokens of type krb5 to omit the subject attribute.
+    - Convert the key and keyring functions in the WebAuth library API
+      to use APR.  The signatures of these functions have therefore
+      changed, and keyring manipulation has changed considerably.  Some
+      of the APIs have been simplified or renamed.
+    - The webauth_random_bytes, webauth_random_key, webauth_token_create,
+      and webauth_token_parse APIs have been removed
+    - All Perl modules now have POD documentation.
+  * Convert to Apache 2.4 and follow the Apache module policy.
+    - Rename libapache2-webauth to libapache2-mod-webauth and
+      libapache2-webkdc to libapache2-mod-webkdc.  Add transitional
+      packages to ease the upgrade.
+    - Use dh_apache2 to handle module and configuration installation.  Do
+      not use it for maintainer script actions, since
+      libapache2-mod-webauth modules have required configuration and can't
+      be enabled by default.
+    - Update the maintainer script actions for the new Apache module
+      policy.
+    - Depend on apache2-dev instead of apache2-threaded-dev.
+    - Remove explicit dependencies on apache2.2-common.
+    - Use apxs, not apxs2.
+  * Mark libwebauth7 and libwebauth-dev Multi-Arch: same and webauth-utils
+    Multi-Arch: foreign.  Convert to multiarch library paths.
+  * libwebauth-dev now suggests libapr1-dev since it is required to use
+    the parts of the API that require APR (such as keyring traversal or
+    creating the WebAuth context from an existing APR pool).
+  * Switch to xz compression for the upstream and Debian tarballs and for
+    the data element of the generated binary packages.
+  * Enable parallel builds.
+  * Use dh-autoreconf to always regenerate the build system from source.
+    Link with --as-needed to ensure we don't pick up unnecessary shared
+    library dependencies.
+  * Move single-debian-patch to local-options and patch-header to
+    local-patch-header so that they only apply to the packages I build and
+    NMUs get regular version-numbered patches.
+  * Purging libapache2-mod-{webauth,webkdc} no longer unconditionally
+    removes the contents of /var/lib/{webauth,webkdc}.  Instead, known
+    files are removed and then removal of the directory is attempted,
+    ignoring failure if the directory is non-empty.
+  * Update to debhelper compatibility level V9.
+    - Use dpkg-buildflags to set CFLAGS.
+    - Enable bindnow hardening.  Leave PIE off for right now.
+    - Simplify all *.install rules to remove debian/tmp and not specify
+      the destination if it echoes the source.
+  * Convert debian/copyright to copyright-format 1.0.
+
+ -- Russ Allbery <rra@debian.org>  Fri, 13 Jul 2012 22:58:20 -0700
+
+webauth (4.1.1-1) unstable; urgency=low
+
+  * New upstream release (no Apache 2.4 support yet; that's next).
+    - Fix webauth_user_info bug in interpreting login history timestamps.
+    - Fix login history timestamp handling in sample confirm template.
+    - Suppress history and token rights in sample confirm template when
+      those data elements are empty.  (Closes: #664735)
+    - Add explicit HTML filters to all sample template variable
+      interpolations as an additional security measure.
+    - Update the mod_webkdc manual for changes in 4.1.0.
+  * If Apache is running and has the module loaded, restart Apache on
+    configure of libapache2-webauth or libapache2-webkdc.
+  * Remove the conditional around the postinst actions for
+    libapache2-webauth and libapache2-webkdc and just always configure the
+    package.  This is at least arguably more correct for the various abort
+    cases, is simpler, and shouldn't hurt.
+
+ -- Russ Allbery <rra@debian.org>  Wed, 25 Apr 2012 14:41:39 -0700
+
+webauth (4.1.0-1) unstable; urgency=low
+
+  * New upstream release.
+    - New mod_webkdc WebKdcUserInfoTimeout option to set a network timeout
+      for user information service queries.  The new default is 30
+      seconds.
+    - New mod_webkdc WebKdcUserInfoIgnoreFail error to allow users to
+      authenticate with password and use pre-existing single sign-on
+      cookies even if the user information service is down.  Be aware that
+      this can allow bypassing a centrally-mandated multifactor
+      requirement.
+    - Use remctl_set_ccache instead of setting KRB5CCNAME when available
+      to avoid memory leaks on calling the user information service and to
+      not leak settings across threads.
+    - Fix WebLogin error handling when the password field is left blank.
+    - Fix WebLogin error handling of empty usernames.
+    - Drop library support for base64-encoded token attributes (which was
+      never used by WebAuth).
+    - Drop webauth_info_{build,version} library APIs.
+    - Document Apache/Tomcat security interaction around URL parsing in
+      the mod_webauth manual.  This affects any Apache security mechanism
+      used in conjunction with Tomcat.
+  * Bump libremctl-dev build dependency to >= 3.1 for consistent builds.
+  * Add Build-Depends-Package to the symbols file for better dependency
+    handling.
+  * Update standards version to 3.9.3 (no changes required).
+
+ -- Russ Allbery <rra@debian.org>  Thu, 15 Mar 2012 16:18:41 -0700
+
+webauth (4.0.2-1) unstable; urgency=low
+
+  * New upstream release.
+    - Fix setting of the REMOTE_USER preference cookie in WebLogin.
+    - Ignore undefined cookies in WebLogin to reduce error logs.
+    - Document factor codes in the mod_webauth manual.
+  * Remove ${shlibs:Depends} from libwebauth-dev dependencies to remove a
+    warning.  This package won't contain compiled binaries.
+
+ -- Russ Allbery <rra@debian.org>  Fri, 02 Dec 2011 21:01:09 -0800
+
+webauth (4.0.1-1) unstable; urgency=low
+
+  * New upstream release.
+    - Change user information service and WebKDC to WebLogin protocols for
+      conveying suspicious login information to use the IP address as the
+      CDATA and put the hostname in an attribute.
+    - Display suspicious logins in WebLogin, forcing a confirmation page.
+    - Log the return URL of authentication requests to the WebKDC.
+    - Reduce mod_webauth log level when retrieving credentials.
+
+ -- Russ Allbery <rra@debian.org>  Fri, 23 Sep 2011 13:42:17 -0700
+
+webauth (4.0.0-2) unstable; urgency=low
+
+  * Fix a variety of uninitialized variables and memory leaks in the
+    libwebauth library and the test suite.  Thanks, Christoph Egger and
+    Aaron M. Ucko.  (Closes: #640259)
+  * Don't attempt to chown files in libwebkdc-perl when doing a
+    binary-only build.  Thanks, Aaron M. Ucko.  (Closes: #640268)
+
+ -- Russ Allbery <rra@debian.org>  Sat, 03 Sep 2011 13:07:04 -0700
+
+webauth (4.0.0-1) unstable; urgency=low
+
+  * New upstream release.
+    - Added support for multifactor, including new WebAuth directives
+      WebAuthRequireInitialFactor, WebAuthRequireSessionFactor, and
+      WebAuthRequireLOA and new WebKDC directives WebKdcUserInfoURL and
+      WebKdcUserInfoPrincipal.  Currently requires a metadata service for
+      which there isn't a packaged implementation.
+    - mod_webauth now exposes the user's initial and session
+      authentication details and level of assurance (if known) in
+      environment variables WEBAUTH_FACTORS_INITIAL,
+      WEBAUTH_FACTORS_SESSION, and WEBAUTH_LOA.
+    - WebLogin now uses Template Toolkit for all templating.  All
+      templates will have to be revised to use the new syntax.
+    - WebLogin can tell an external middleware service to send the user an
+      OTP code via some means, such as SMS.  There are new configuration
+      variables for /etc/webkdc/webkdc.conf that control this.
+    - WebLogin now supports a site-specific callback to determine the
+      initial and session factors and level of assurance for a user who
+      has been authenticated via Apache authentication.
+    - The keyring functions of the WebAuth Perl module have been rewritten
+      to use an object-oriented style and new WebAuth::Keyring and
+      WebAuth::KeyringEntry objects.  Perl code that used the keyring API
+      will need to be modified.  Methods to remove a key from a keyring,
+      get the timestamps and keys associated with keyring entries, and
+      choose the best key have been added.
+    - The libwebauth API has been changed substantially and will be
+      changed further in subsequent releases.
+    - The proxy data attribute of webkdc-proxy tokens is now optional.
+  * Install /var/cache/weblogin, writable by www-data, as a directory to
+    use for Template Toolkit to cache compiled templates.  Mention the new
+    $TEMPLATE_COMPILE_PATH directive in the libwebkdc-perl NEWS.Debian.
+  * Update the webauth-weblogin README.Debian to mention the Apache
+    FastCGI module now included in Debian and the alternative in
+    non-free.
+
+ -- Russ Allbery <rra@debian.org>  Fri, 02 Sep 2011 15:57:56 -0700
+
+webauth (3.7.4-1) unstable; urgency=low
+
+  * New upstream release.
+    - New Apache directive WebAuthOptional, which does not force the user
+      to authenticate if they're not already authenticated but adds the
+      authentication information to the environment if they are.  Intended
+      for use with dynamic content that can manage optional authentication
+      through an explicit login link.
+    - Work around an MIT Kerberos library bug in error reporting from
+      password change and remove the previous cruder workaround that
+      mapped Kerberos errors to password strength warnings.
+    - Suppress certificate validation for the WebKDC in WebLogin if the
+      WebKDC URL is localhost, required by libwww-perl 5.837 or later.
+    - More robust generation of the pkg-config configuration file.
+    - Clearer warning from WebLogin when paired with an old WebKDC.
+    - Document the pt and sa key/value pairs in WebKDC logging.
+  * Drop the transitional libwebauth1-dev package, required to smooth
+    upgrades from lenny.  squeeze released with libwebauth-dev.
+  * Update to debhelper compatibility level V8.
+    - Use debhelper rule minimization with overrides.
+    - Do more work in *.install files and less work in debian/rules.
+  * Switch to 3.0 (quilt) source format.  Force a single Debian patch and
+    include a custom patch header explaining that it is a rollup of any
+    fixes cherry-picked from upstream and breaking those patches out
+    separately would be work for no gain.
+  * Update standards version to 3.9.2 (no changes required).
+
+ -- Russ Allbery <rra@debian.org>  Wed, 11 May 2011 15:26:32 -0700
+
+webauth (3.7.3-2) unstable; urgency=low
+
+  * Upload to unstable.
+
+ -- Russ Allbery <rra@debian.org>  Wed, 02 Mar 2011 16:48:17 -0800
+
+webauth (3.7.3-1) experimental; urgency=low
+
+  * New upstream release.
+    - Fix LDAP attribute retrieval for WebAuth 2.x compatibility.
+    - libwebauth now provides a pkg-config configuration file.
+
+ -- Russ Allbery <rra@debian.org>  Mon, 20 Sep 2010 17:07:48 -0700
+
+webauth (3.7.2-1) experimental; urgency=low
+
+  * New upstream release.
+    - Fix wa_keyring option parsing problems introduced in 3.7.0.
+    - Fix uninitalized variable causing wa_keyring to randomly default to
+      verbose mode.
+    - mod_webkdc now returns user rejected instead of a generic Kerberos
+      error for attempted authentications to expired or disabled
+      accounts, improving the error message displayed by WebLogin.
+  * Add build dependencies on libipc-run-perl and libtimedate-perl to
+    enable wa_keyring tests.
+  * Update standards version to 3.9.1 (no changes required).
+
+ -- Russ Allbery <rra@debian.org>  Thu, 12 Aug 2010 15:31:18 -0700
+
+webauth (3.7.1-1) unstable; urgency=low
+
+  * New upstream release.
+    - Password change in WebLogin now forces re-entry of the old password
+      on the same screen as the new password even if the user had just
+      authenticated, with a configuration option to disable this.
+    - The default proxy token lifetime is now the lifetime of the
+      underlying Kerberos credential, matching the documentation, instead
+      of ten hours.
+    - Improve error reporting in WebLogin for password change failures.
+
+ -- Russ Allbery <rra@debian.org>  Fri, 23 Jul 2010 12:51:43 -0700
+
+webauth (3.7.0-1) unstable; urgency=low
+
+  * New upstream release.
+    - WebAuthLdapAuthRule in mod_webauthldap now sets environment
+      variables to the value "privgroup <privgroup>" rather than the
+      previous behavior of just "<privgroup>".
+    - New WebAuthLdapPrivgroup directive for mod_webauthldap which probes
+      user's membership in multiple privgroups and sets an environment
+      variable to the list of those they're in.
+    - WebAuthLdapAttribute can now take multiple attributes on one line.
+    - WebLogin includes a password change script and template.
+    - WebLogin now supports password expiration handling.
+    - WebLogin may be configured to warn users of expiring passwords.
+    - WebLogin catches SIGTERM in login.fcgi and finishes the current
+      request, fixing some problems with unclean shutdown when FastCGI
+      restarts the running scripts.
+    - WebLogin correctly encodes RT and ST in the URL when redirecting to
+      an alternate URL when attempting REMOTE_USER authentication.
+    - wa_keyring now uses ISO format for timestamps.
+    - Various changes and cleanup to the WebAuth library API.
+    - Link wa_keyring with libcrypto properly.  (Closes: #556674)
+    - Avoid importing isa from UNIVERSAL.  (Closes: #578632)
+    - Lower the log level of some mod_webauth diagnostics.
+  * The default help.html file is now installed into
+    /usr/share/weblogin/generic/templates instead of one level higher.
+  * Upstream now no longer uses apxs to install modules, so upstream
+    supports DESTDIR and debian/rules can use make install instead of
+    rewriting all the installation rules.
+  * Drop the SONAME version from libwebauth-dev.  We'll never need to
+    maintain development packages for more than one version of the ABI in
+    Debian at the same time.  Add a transitional package to assist with
+    upgrades.
+  * Move Perl module dependencies from webauth-weblogin to libwebkdc-perl
+    since the supporting modules now load the other required Perl modules.
+  * Bump the versioned dependencies from webauth-weblogin and
+    libwebkc-perl on libwebauth-perl and in webauth-weblogin on
+    libwebkdc-perl.
+  * Add an explicit dependency on liburi-perl to libwebkdc-perl.
+  * Fix Perl dependencies in webauth-weblogin and webauth-tests.
+  * Add a Suggests of libapache2-mod-php5 to webauth-tests.
+  * Add Suggests of libtimedate-perl, libtime-duration-perl, and
+    libnet-remctl-perl to libwebkdc-perl, required for now for expiring
+    password warning support.
+  * Downgrade the libwebauth-dev dependency on libkrb5-dev to Suggests
+    since it's only required for static linking.
+  * Update build dependency to libcurl4-openssl-dev.
+  * Add additional build dependencies so that the Perl module test suite
+    can run.
+  * Force source format 1.0 for right now to make backporting easier.
+  * Update to debhelper compatibility level V7.
+    - Add ${misc:Depends} to all dependencies.
+    - Use dh_prep instead of dh_clean -k.
+  * Update standards version to 3.9.0 (no changes required).
+
+ -- Russ Allbery <rra@debian.org>  Thu, 08 Jul 2010 15:52:26 -0700
+
+webauth (3.6.2-2) unstable; urgency=low
+
+  * Set DESTDIR instead of PREFIX when installing the Perl modules.  Perl
+    5.10.1 doesn't allow changing PREFIX at install time.  Thanks, Niko
+    Tyni.
+
+ -- Russ Allbery <rra@debian.org>  Tue, 15 Sep 2009 20:33:12 -0700
+
+webauth (3.6.2-1) unstable; urgency=high
+
+  * New upstream release.
+    - CVE-2009-2945: When generating a redirect to test for cookie
+      support, be sure not to include a password in the URL.  Reject
+      username/password logins via methods other than POST.
+    - If the user submits the login form via POST without the test cookie,
+      assume the browser supports cookies and don't probe.
+    - New script (in /usr/share/doc/webauth-weblogin/weblogin-passcheck)
+      to find passwords exposed by CVE-2009-2945.
+
+ -- Russ Allbery <rra@debian.org>  Tue, 08 Sep 2009 15:30:20 -0700
+
+webauth (3.6.1-2) unstable; urgency=low
+
+  * Do not install the libwebauth.la file.  Libtool *.la files force other
+    packages using Libtool to declare excessive library dependencies.
+  * Update standards version to 3.8.3 (no changes required).
+
+ -- Russ Allbery <rra@debian.org>  Mon, 24 Aug 2009 16:24:26 -0700
+
+webauth (3.6.1-1) unstable; urgency=low
+
+  * New upstream release.
+    - $BYPASS_CONFIRM now suppresses the confirm page after POST for
+      browsers that support this.
+    - $BYPASS_CONFIRM can be set to "id" to only bypass the confirmation
+      page if the WAS is not requesting a proxy token (and hence may
+      request delegated credentials).
+    - New variables for the WebLogin confirmation page containing
+      delegated credential details.
+    - Better WebLogin cookie handling with confirmation bypass.
+  * Remove -L and -l flags to dh_shlibdeps, which are no longer needed.
+  * Remove full paths to a2dismod in the package prerm scripts.
+  * Update standards version to 3.8.2.
+    - Change sections of Apache modules.
+    - Run test suite iff nocheck is not set in DEB_BUILD_OPTIONS.
+  * Add Vcs-Git and Vcs-Browser source control fields.
+  * Improve short description for libwebkdc-perl.
+  * Update debian/copyright to include a copy of the more thorough new
+    upstream LICENSE file.
+
+ -- Russ Allbery <rra@debian.org>  Tue, 14 Jul 2009 19:32:01 -0700
+
+webauth (3.6.0-1) unstable; urgency=low
+
+  * New upstream release.
+    - Fix prematurely freed internal data in mod_webauth.
+    - Work around a CGI Perl module bug in WebLogin that caused crashes
+      for WebLogin URLs containing two slashes and two plus signs.
+    - Add WebLogin support for delegated credentials.  Based on work by
+      Joachim Keltsch.  (Closes: #466792)
+    - New WebKdcLocalRealms and WebKdcPermittedRealms mod_webkdc options.
+    - New WebKDC protocol error for a login rejected by policy.
+    - New err_rejected variable in the weblogin login.tmpl template.
+    - Several new WebLogin configuration options and hooks.
+    - WebLogin REMOTE_USER variables have been renamed for consistency,
+      but the old variables will continue to work.
+  * Add symbols support for libwebauth1.
+  * Bump shlibs for libwebauth1 for the introduction of a new interface.
+  * Minor debian/rules tweaking:
+    - Use the right configure arguments for cross-compiles.
+    - Use touch $@ to create stamp files.
+    - Use install rather than cp and mkdir.
+  * Update the doc-base section for the WebAuth protocol specification.
+
+ -- Russ Allbery <rra@debian.org>  Fri, 21 Mar 2008 22:10:09 -0700
+
+webauth (3.5.5-1) unstable; urgency=low
+
+  * New upstream release.
+    - Check browser cookie support on first WebLogin visit for better
+      cookie checks with Apache authentication.  (Closes: #430486)
+    - New err_cookies_disabled error template variable.
+    - Fix memory allocation for environment variables in mod_webauthldap.
+    - Improve display of Shibboleth destination URLs.
+  * Incorporate NEWS.Debian into webauth-weblogin.NEWS, since it is the
+    only affected package for the old news item.
+  * Call dh_fixperms before dh_strip so that the WebAuth Perl module will
+    be stripped properly.
+  * Recommend httpd-cgi and suggest libapache2-mod-auth-kerb for
+    webauth-weblogin.
+  * Use ${binary:Version} instead of ${Source-Version} in debian/control.
+  * Move the Homepage pseudo-header from Description to a real header.
+  * Wrap all Depends lines in debian/control.
+  * Drop the version on the Perl build-depends.  That version is older
+    than oldstable.
+  * libwebkdc-perl is arch-independent, so no need for ${shilbs:Depends}.
+  * Use a configure-stamp file rather than config.status.
+  * Capitalize WebLogin consistently in package descriptions.
+  * Update standards version to 3.7.3 (no changes required).
+  * Update debhelper compatibility level to V5 (no changes required).
+
+ -- Russ Allbery <rra@debian.org>  Tue, 08 Jan 2008 22:00:03 -0800
+
+webauth (3.5.4-1) unstable; urgency=low
+
+  * New upstream release.
+    - WebLogin supports displaying destination Shibboleth URLs.
+    - Be more aggressive about telling browsers not to cache.
+    - Properly merge directory configurations in mod_webauthldap.
+    - Refresh REMOTE_USER cookies in WebLogin.
+    - Improved WebLogin documentation of cookies used.
+  * Put the Apache modules in the net section to match overrides.
+
+ -- Russ Allbery <rra@debian.org>  Tue, 24 Apr 2007 14:35:35 -0700
+
+webauth (3.5.3-2) unstable; urgency=low
+
+  * Rebuild for Apache 2.2.
+    - Add versioned build dependency.
+    - Change module dependencies from apache2 to apache2.2-common.
+    - Document the need to enable authz_user.
+  * Depend on apache2-threaded-dev rather than on the virtual apache2-dev
+    package.
+
+ -- Russ Allbery <rra@debian.org>  Mon,  9 Oct 2006 16:07:54 -0700
+
+webauth (3.5.3-1) unstable; urgency=low
+
+  * New usptream release.
+    - Upstream source now supports Apache 2.2 builds.
+    - Improve and document mod_webkdc logging.
+    - Disable debug logging in the weblogin scripts.
+
+ -- Russ Allbery <rra@debian.org>  Mon, 11 Sep 2006 20:34:07 -0700
+
+webauth (3.5.2-1) unstable; urgency=medium
+
+  * New upstream release.
+    - SECURITY: Fix the default weblogin templates to always escape form
+      variables.  Sites using customized templates should check their
+      templates for the same issue; see NEWS.gz for more information.
+    - When Apache authentication for weblogin fails, don't retry for that
+      user session even on empty form submissions.
+    - Mark weblogin login and logout pages and not cachable by browsers.
+  * Include NEWS, README, and TODO in the webauth-weblogin doc directory.
+
+ -- Russ Allbery <rra@debian.org>  Thu, 13 Jul 2006 17:56:23 -0700
+
+webauth (3.5.1-1) unstable; urgency=low
+
+  * New upstream release.
+    - Multiple changes to the Weblogin scripts and templates that will
+      require updates to existing templates.  See the upstream NEWS file
+      for more details.
+    - Fix decoding of keyring times on 64-bit platforms.
+  * Update standards version to 3.7.2 (no changes required).
+
+ -- Russ Allbery <rra@debian.org>  Tue, 20 Jun 2006 09:20:44 -0700
+
+webauth (3.5.0-1) unstable; urgency=low
+
+  * New upstream release.
+    - WebAuthExtraRedirect on is now the default.
+    - Clean up of weblogin template variables.  Existing templates will
+      have to be updated.
+    - Support for optional Apache authentication in weblogin.
+    - Clean up and better documentation of the weblogin code.
+    - New weblogin configuration documentation.
+    - http://webauth.stanford.edu/ is now the canonical upstream URL.
+
+ -- Russ Allbery <rra@debian.org>  Mon, 20 Mar 2006 17:29:57 -0800
+
+webauth (3.4.2-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Russ Allbery <rra@debian.org>  Fri, 17 Feb 2006 20:18:49 -0800
+
+webauth (3.4.1-1) unstable; urgency=low
+
+  * New upstream release.
+    - Reverted the change to not strip WebAuth data from unprotected URLs
+      since it interacted poorly with .htaccess files.
+    - The config option WebAuthStripURL is now documented and supported.
+    - Avoid deprecated OpenLDAP APIs.
+
+ -- Russ Allbery <rra@debian.org>  Mon,  6 Feb 2006 17:38:30 -0800
+
+webauth (3.4.0-1) unstable; urgency=low
+
+  * New upstream release.
+    - webauth-weblogin can now optionally try SPNEGO authentication before
+      prompting for a username and password.
+    - mod_webauth doesn't strip WebAuth information from the internal URL
+      for requests not protected by WebAuth.
+    - Much improved protocol specification.
+    - Use --enable-reduced-depends to reduce library dependencies.
+    - No compiler warnings with -Wall.
+  * Only install the protocol documentation in libapache2-mod-webauth, not
+    in libapache2-mod-webkdc.  If you're using WebAuth at all you'll
+    install the former somewhere, and there's no need to duplicate it.
+  * Register the protocol documentation with doc-base.
+  * Don't install HACKING; it's not useful without the source.
+  * Use DH_OPTIONS to reduce clutter in debian/rules.
+  * Add build-arch and build-indep targets.
+  * Don't ignore the return status of make distclean.
+  * Use stamp files in a cleaner way.
+  * Update copyright dates.
+
+ -- Russ Allbery <rra@debian.org>  Mon, 23 Jan 2006 22:09:35 -0800
+
+webauth (3.3.0-2) unstable; urgency=low
+
+  * Build-depend on libcurl3-openssl-dev, not libcurl3-dev.
+  * Update maintainer address.
+
+ -- Russ Allbery <rra@debian.org>  Wed, 16 Nov 2005 16:39:21 -0800
+
+webauth (3.3.0-1) unstable; urgency=low
+
+  * New upstream release.
+    - S/Ident support removed.
+    - New WebAuthLdapSeparator configuration setting for multi-valued
+      attribute handling.
+    - libwebauth now uses symbol versioning.
+  * Update copyright to my current format and add an explicit packaging
+    copyright and license statement.
+  * Minor cleanup of debian/rules.
+  * Indent the homepage in package descriptions to avoid wrapping.
+  * Update standards version to 3.6.2 (no changes required).
+
+ -- Russ Allbery <rra@stanford.edu>  Tue,  4 Oct 2005 21:40:28 -0700
+
+webauth (3.2.8-1) unstable; urgency=low
+
+  * New upstream release.
+    - mod_webauth now handles empty keyring files appropriately.
+    - Significant improvements to the mod_webkdc manual.
+
+ -- Russ Allbery <rra@stanford.edu>  Thu,  2 Jun 2005 23:21:02 -0700
+
+webauth (3.2.7-1) unstable; urgency=low
+
+  * New upstream release.
+    - Update libtool to 1.5.6 for better shared library support on MIPS.
+      Thanks, Ryan Murray.  (Closes: #306027)
+    - Better diagnose a missing service token on a weblogin request.
+
+ -- Russ Allbery <rra@stanford.edu>  Sat, 23 Apr 2005 14:33:20 -0700
+
+webauth (3.2.6-1) unstable; urgency=low
+
+  * Uploaded to Debian.  (Closes: #304728)
+  * New upstream release.
+    - Renamed the WebAuth3 Perl bindings to WebAuth.
+    - Renamed the libwebauth3-perl package to libwebauth-perl accordingly.
+  * Add dependency on libwebauth-perl to webauth-weblogin.  libwebkdc-perl
+    will also pull it in, but this is more completely correct.
+  * Add watch file.
+
+ -- Russ Allbery <rra@stanford.edu>  Mon, 18 Apr 2005 23:06:23 -0700
+
+webauth (3.2.5-1) unstable; urgency=low
+
+  * New upstream release.
+    - Removed debian directory from upstream tarball.
+    - Report information from mod_webauthldap at saner message levels.
+  * Fix package sections and formatting of the homepage link.
+  * Use CFLAGS for the Perl module builds rather than hard-coding flags.
+  * Change the README.Debian files to follow the Apache 2.x package
+    recommendations for where to put local configuration.
+  * Add upstream TODO to libapache2-webauth and libapache2-webkdc.
+
+ -- Russ Allbery <rra@stanford.edu>  Thu, 14 Apr 2005 21:51:28 -0700
+
+webauth (3.2.4-2) unstable; urgency=low
+
+  * No source changes.
+  * Rebuild for libcurl migration.
+
+ -- Russ Allbery <rra@stanford.edu>  Mon,  7 Mar 2005 14:47:24 -0800
+
+webauth (3.2.4-1) unstable; urgency=low
+
+  * New upstream release.
+    - Fix bug in S/Ident handling in weblogin script.
+  * Add prerm scripts for libapache2-webauth and libapache2-webkdc to call
+    a2dismod if the module is enabled.
+
+ -- Russ Allbery <rra@stanford.edu>  Wed, 25 Aug 2004 17:36:56 -0700
+
+webauth (3.2.3-1) unstable; urgency=low
+
+  * Initial release.
+
+ -- Russ Allbery <rra@stanford.edu>  Wed, 23 Jun 2004 16:11:02 -0700

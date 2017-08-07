@@ -1,0 +1,266 @@
+Source: webauth
+Section: web
+Priority: optional
+Maintainer: Russ Allbery <rra@debian.org>
+Build-Depends:
+ apache2-dev (>> 2.4.4-3~),
+ debhelper (>= 9),
+ dh-apache2,
+ dh-autoreconf,
+ libapr1-dev,
+ libaprutil1-dev,
+ libauthen-oath-perl,
+ libcgi-application-perl,
+ libcgi-application-plugin-autorunmode-perl,
+ libcgi-application-plugin-forward-perl,
+ libcgi-application-plugin-tt-perl,
+ libcgi-fast-perl,
+ libcrypt-generatepassword-perl,
+ libcurl4-openssl-dev,
+ libfreezethaw-perl,
+ libgetopt-long-descriptive-perl,
+ libipc-run-perl,
+ libjansson-dev (>= 2.6),
+ libjson-perl,
+ libkrb5-dev,
+ libldap2-dev,
+ libmime-base32-perl,
+ libmodule-build-perl,
+ libnet-remctl-perl,
+ libremctl-dev (>= 3.1),
+ libssl-dev,
+ libtemplate-perl,
+ libtest-minimumversion-perl,
+ libtest-pod-perl,
+ libtest-strict-perl,
+ libtime-duration-perl,
+ libtimedate-perl,
+ liburi-perl,
+ libwww-mechanize-perl,
+ libwww-perl,
+ libxml-parser-perl,
+ perl,
+ pkg-config,
+Standards-Version: 4.0.1
+Homepage: https://webauth.stanford.edu/
+Vcs-Git: https://git.eyrie.org/git/kerberos/webauth.git -b debian
+Vcs-Browser: https://git.eyrie.org/?p=kerberos/webauth.git
+
+Package: libapache2-mod-webauth
+Section: httpd
+Architecture: any
+Depends:
+ apache2 (>= 2.4.4),
+ ${misc:Depends},
+ ${shlibs:Depends},
+Suggests:
+ libapache2-mod-webauthldap,
+Breaks:
+ libapache2-webauth (<< 4.2.0),
+Replaces:
+ libapache2-webauth (<< 4.2.0),
+Description: Apache module for WebAuth authentication
+ WebAuth is a cookie-based web authentication system built on top of
+ Kerberos.  It relies on a central authentication server that handles all
+ user authentication for a domain and creates user authentication
+ credentials for any web server that needs strong authentication.
+ .
+ This package contains the Apache module to do user authentication for
+ individual web servers.  This module does not do authorization; for an
+ approach to LDAP-based authorization that works well with WebAuth, see
+ libapache2-mod-webauthldap.
+
+Package: libapache2-mod-webauthldap
+Section: httpd
+Architecture: any
+Depends:
+ apache2 (>= 2.4.4),
+ libapache2-mod-webauth,
+ libsasl2-modules-gssapi-mit | libsasl2-modules-gssapi-heimdal,
+ ${misc:Depends},
+ ${shlibs:Depends},
+Breaks:
+ libapache2-mod-webauth (<< 4.5.3-3~),
+ libapache2-webauth (<< 4.2.0),
+Replaces:
+ libapache2-mod-webauth (<< 4.5.3-3~),
+ libapache2-webauth (<< 4.2.0),
+Description: Apache module for WebAuth LDAP lookup and authorization
+ WebAuth is a cookie-based web authentication system built on top of
+ Kerberos.  It relies on a central authentication server that handles all
+ user authentication for a domain and creates user authentication
+ credentials for any web server that needs strong authentication.
+ .
+ This package contains an Apache module to do LDAP-based authorization
+ after a WebAuth authentication and retrieve LDAP information about the
+ authenticated user.  It only supports GSS-API binds and requires WebAuth
+ be used as the authentication method.
+
+Package: libapache2-mod-webkdc
+Section: httpd
+Architecture: any
+Depends:
+ ${misc:Depends},
+ ${shlibs:Depends},
+Breaks:
+ libapache2-webkdc (<< 4.2.0),
+Replaces:
+ libapache2-webkdc (<< 4.2.0),
+Description: Apache modules for a WebAuth authentication KDC
+ WebAuth is a cookie-based web authentication system built on top of
+ Kerberos.  It relies on a central authentication server that handles all
+ user authentication for a domain and creates user authentication
+ credentials for any web server that needs strong authentication.
+ .
+ This package contains the Apache module for the central authentication
+ server for a particular site.  Only one such server is needed; all web
+ servers that use WebAuth will talk to this server to obtain and verify
+ authentication credentials.
+
+Package: libwebauth-perl
+Section: perl
+Architecture: any
+Multi-Arch: same
+Depends:
+ ${misc:Depends},
+ ${perl:Depends},
+ ${shlibs:Depends},
+Breaks:
+ libwebkdc-perl (<< 4.5.0),
+Description: Perl library for WebAuth authentication
+ WebAuth is a cookie-based web authentication system built on top of
+ Kerberos.  It relies on a central authentication server that handles all
+ user authentication for a domain and creates user authentication
+ credentials for any web server that needs strong authentication.
+ .
+ This package contains the Perl bindings to the WebAuth library, which
+ does token encoding and decoding and other lower-level parts of the
+ WebAuth protocol.
+
+Package: libwebauth12
+Section: libs
+Architecture: any
+Multi-Arch: same
+Pre-Depends:
+ ${misc:Pre-Depends},
+Depends:
+ ${misc:Depends},
+ ${shlibs:Depends},
+Description: Shared libraries for WebAuth authentication
+ WebAuth is a cookie-based web authentication system built on top of
+ Kerberos.  It relies on a central authentication server that handles all
+ user authentication for a domain and creates user authentication
+ credentials for any web server that needs strong authentication.
+ .
+ This package contains the shared library used by the WebAuth modules,
+ Perl bindings, and command-line utilities.  It does token encoding and
+ decoding and other lower-level parts of the WebAuth protocol.
+
+Package: libwebauth-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends:
+ libwebauth12 (= ${binary:Version}),
+ ${misc:Depends},
+Suggests:
+ libapr1-dev,
+ libkrb5-dev,
+Description: Development files for WebAuth authentication
+ WebAuth is a cookie-based web authentication system built on top of
+ Kerberos.  It relies on a central authentication server that handles all
+ user authentication for a domain and creates user authentication
+ credentials for any web server that needs strong authentication.
+ .
+ This package contains the symlinks, headers, and static library needed to
+ compile and link programs that use libwebauth.
+
+Package: libwebkdc-perl
+Section: perl
+Architecture: all
+Depends:
+ libcgi-application-perl,
+ libcgi-application-plugin-autorunmode-perl,
+ libcgi-application-plugin-forward-perl,
+ libcgi-application-plugin-tt-perl,
+ libcgi-fast-perl,
+ libio-socket-ssl-perl,
+ libtemplate-perl,
+ libtime-duration-perl,
+ liburi-perl,
+ libwebauth-perl (>= 4.6.0),
+ libwww-perl,
+ libxml-parser-perl,
+ ${misc:Depends},
+ ${perl:Depends},
+Suggests:
+ libcache-memcached-perl,
+ libnet-remctl-perl,
+ libtimedate-perl,
+Breaks:
+ webauth-weblogin (<< 4.5.0),
+Description: Perl libraries for WebAuth central login server
+ WebAuth is a cookie-based web authentication system built on top of
+ Kerberos.  It relies on a central authentication server that handles all
+ user authentication for a domain and creates user authentication
+ credentials for any web server that needs strong authentication.
+ .
+ This package contains the WebKDC Perl modules that support the WebLogin
+ server, which handles user authentication and the establishment of
+ initial authentication credentials.
+
+Package: webauth-tests
+Architecture: all
+Multi-Arch: foreign
+Depends:
+ libapache2-mod-webauth,
+ libwebauth-perl,
+ ${misc:Depends},
+ ${perl:Depends},
+Suggests:
+ libapache2-mod-php5,
+Description: Tests for the WebAuth authentication modules
+ WebAuth is a cookie-based web authentication system built on top of
+ Kerberos.  It relies on a central authentication server that handles all
+ user authentication for a domain and creates user authentication
+ credentials for any web server that needs strong authentication.
+ .
+ This package contains test HTML files and Apache configuration
+ fragments to test a new installation of the WebAuth modules.
+
+Package: webauth-utils
+Architecture: any
+Multi-Arch: foreign
+Depends:
+ ${misc:Depends},
+ ${shlibs:Depends},
+Description: Command-line utilities for WebAuth authentication
+ WebAuth is a cookie-based web authentication system built on top of
+ Kerberos.  It relies on a central authentication server that handles all
+ user authentication for a domain and creates user authentication
+ credentials for any web server that needs strong authentication.
+ .
+ This package contains an additional command-line tool to manipulate
+ WebAuth keyrings.
+
+Package: webauth-weblogin
+Architecture: all
+Multi-Arch: foreign
+Depends:
+ libwebkdc-perl (>= 4.5.0),
+ ${misc:Depends},
+ ${perl:Depends},
+Recommends:
+ httpd-cgi,
+Suggests:
+ libapache2-mod-auth-kerb,
+Description: Central login server for WebAuth authentication
+ WebAuth is a cookie-based web authentication system built on top of
+ Kerberos.  It relies on a central authentication server that handles all
+ user authentication for a domain and creates user authentication
+ credentials for any web server that needs strong authentication.
+ .
+ This package contains the CGI-based WebLogin server that handles initial
+ user authentication and building authentication tokens for WebAuth
+ servers.  Only one WebLogin server is needed to support a site WebAuth
+ installation.  It is normally run on the same system as the WebKDC.

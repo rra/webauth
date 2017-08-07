@@ -1,0 +1,57 @@
+#!/usr/bin/make -f
+
+# Add hardening build flags.  We have to omit PIE because it breaks the Perl
+# module build (and probably the other interpretors as well).
+export DEB_BUILD_MAINT_OPTIONS = hardening=+bindnow
+
+# Link with --as-needed so that webauth-utils doesn't inherit the shared
+# library dependencies of libwebauth.
+export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
+
+# The additional flags to pass to Build.PL, picked up by the upstream
+# build system.
+export WEBAUTH_PERL_FLAGS := --installdirs vendor --create_packlist 0
+
+# Enable some additional tests.
+export AUTOMATED_TESTING := 1
+
+ifndef PERL
+    PERL = /usr/bin/perl
+endif
+
+# Ask Perl for the vendor arch-specific module directory.
+PERL_VENDORARCH := $(shell perl -MConfig -e 'print $$Config{vendorarch}')
+
+%:
+	dh $@ --parallel --with apache2,autoreconf
+
+override_dh_autoreconf:
+	dh_autoreconf --as-needed
+
+override_dh_auto_configure:
+	dh_auto_configure --parallel -- --libexecdir=/usr/lib \
+	    --enable-webkdc --enable-perl --with-apxs=/usr/bin/apxs \
+	    --enable-reduced-depends
+
+override_dh_auto_install:
+	dh_auto_install
+	chmod a+x debian/tmp/usr/share/weblogin/*.fcgi
+	mkdir -p debian/tmp/usr/share/perl5
+	mv debian/tmp$(PERL_VENDORARCH)/WebKDC* debian/tmp/usr/share/perl5
+	mv debian/tmp$(PERL_VENDORARCH)/WebLogin* debian/tmp/usr/share/perl5
+
+override_dh_installchangelogs:
+	dh_installchangelogs NEWS
+
+override_dh_fixperms:
+	dh_fixperms
+	set -e; if [ -d 'debian/libwebkdc-perl/var/cache/weblogin' ] ; then \
+	    chown www-data:www-data debian/libwebkdc-perl/var/cache/weblogin; \
+	fi
+
+# libapache2-mod-webauth has modules with directives with no default that
+# must be set, so we need to not enable those modules by default.
+override_dh_apache2:
+	dh_apache2 -Nlibapache2-mod-webauth -Nlibapache2-mod-webauthldap
+	dh_apache2 -plibapache2-mod-webauth -e
+	dh_apache2 -plibapache2-mod-webauthldap -e

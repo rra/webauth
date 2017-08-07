@@ -1,0 +1,4 @@
+debian/webkdc.conf      etc/webkdc
+usr/share/man/man3/WebKDC*.3pm
+usr/share/man/man3/WebLogin.3pm
+usr/share/perl5
