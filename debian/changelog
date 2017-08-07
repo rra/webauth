@@ -3,6 +3,7 @@ webauth (4.7.0-5) unstable; urgency=medium
   * Upload to experimental, since that's where Apache for OpenSSL 1.1 is
     being staged.
   * Build-depend on libssl-dev to build against OpenSSL 1.1.
+    (Closes: #859788)
   * Remove old transitional packages for the Apache module renaming.
   * Update standards version to 4.0.1.
     - Change all extra priorities to optional.
