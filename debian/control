@@ -41,7 +41,7 @@ Build-Depends:
  libxml-parser-perl,
  perl,
  pkg-config,
-Standards-Version: 3.9.8
+Standards-Version: 4.0.1
 Homepage: https://webauth.stanford.edu/
 Vcs-Git: https://git.eyrie.org/git/kerberos/webauth.git -b debian
 Vcs-Browser: https://git.eyrie.org/?p=kerberos/webauth.git
@@ -117,40 +117,6 @@ Description: Apache modules for a WebAuth authentication KDC
  servers that use WebAuth will talk to this server to obtain and verify
  authentication credentials.
 
-Package: libapache2-webauth
-Section: oldlibs
-Priority: extra
-Architecture: all
-Depends:
- libapache2-mod-webauth,
- libapache2-mod-webauthldap,
- ${misc:Depends},
-Description: Transitional package for WebAuth Apache modules
- WebAuth is a cookie-based web authentication system built on top of
- Kerberos.  It relies on a central authentication server that handles all
- user authentication for a domain and creates user authentication
- credentials for any web server that needs strong authentication.
- .
- This package is a transitional package to ease upgrades to the correct
- Apache module package naming scheme.  It can be safely removed.
-
-Package: libapache2-webkdc
-Section: oldlibs
-Priority: extra
-Architecture: all
-Depends:
- libapache2-mod-webkdc,
- ${misc:Depends},
-Description: Transitional package for WebAuth authentication KDC
- WebAuth is a cookie-based web authentication system built on top of
- Kerberos.  It relies on a central authentication server that handles all
- user authentication for a domain and creates user authentication
- credentials for any web server that needs strong authentication.
- .
- This package is a transitional package for the WebKDC to ease upgrades to
- the correct Apache module package naming scheme.  It can be safely
- removed.
-
 Package: libwebauth-perl
 Section: perl
 Architecture: any
@@ -192,7 +158,6 @@ Description: Shared libraries for WebAuth authentication
 
 Package: libwebauth-dev
 Section: libdevel
-Priority: extra
 Architecture: any
 Multi-Arch: same
 Depends:
