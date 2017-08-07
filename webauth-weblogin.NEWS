@@ -1,0 +1,98 @@
+webauth-weblogin (4.5.0-1) experimental; urgency=low
+
+  Creating single sign-on cookies is no longer the default in the WebLogin
+  code; instead, it is controlled by a form parameter on the login form.
+  Sites wanting to maintain the previous behavior should either add a
+  checkbox (checked by default) to their login form similar to:
+
+      <input type="checkbox" name="remember_login" value="yes"
+             checked="checked">
+
+  with appropriate associated wording and add remember_login as an
+  additional hidden form variable to all of the forms in the multifactor,
+  confirm, and pwchange templates.  See the sample templates in
+  /usr/share/weblogin/generic/templates for examples, which includes a
+  more complex example for the login page that preserves the checkbox
+  after a failed authentication.
+
+  Or, to not change the UI and keep the previous behavior, add:
+
+      $REMEMBER_FALLBACK = 'yes';
+
+  to /etc/webkdc/webkdc.conf.  This setting controls the default if no
+  remember_login value is sent by the login HTML form.
+  
+ -- Russ Allbery <rra@debian.org>  Fri, 26 Apr 2013 13:31:11 -0700
+
+webauth-weblogin (3.7.0-1) unstable; urgency=low
+
+  The default help.html page is in /usr/share/weblogin/generic/templates
+  instead of /usr/share/weblogin/generic.  If you reference it in your
+  Apache configuration, you will need to change the path.
+
+ -- Russ Allbery <rra@debian.org>  Wed, 07 Jul 2010 14:44:56 -0700
+
+webauth-weblogin (3.6.2-1) unstable; urgency=high
+
+  Versions of the webauth-weblogin package between 3.5.5 and 3.6.1,
+  inclusive, could in rare cases convert the user login to a GET and
+  expose the user's password in the URL, from which it would enter the
+  user's browser history and possibly be sent to remote web sites via
+  referrer.  /usr/share/doc/webauth-weblogin/weblogin-passcheck is a
+  script that searches WebLogin web server logs and identifies users that
+  may be affected by this problem.  Run it with -h for usage information.
+
+ -- Russ Allbery <rra@debian.org>  Tue, 08 Sep 2009 12:35:53 -0700
+
+webauth-weblogin (3.6.0-1) unstable; urgency=low
+
+  The login.tmpl WebLogin template has a new error variable, err_rejected,
+  which will be set if the user login was rejected due to a
+  WebKdcPermittedRealms setting.
+
+ -- Russ Allbery <rra@debian.org>  Fri, 21 Mar 2008 22:05:56 -0700
+
+webauth-weblogin (3.5.5-1) unstable; urgency=low
+
+  WebLogin now checks for cookies as the first action when a browser goes
+  to WebLogin for the initial time and uses the error template rather than
+  the login template to display errors about disabled cookies.  The
+  err_cookies template variable in the login template is no longer used,
+  and the error template has a new err_cookies_disabled parameter.
+
+  Custom templates should be updated to handle err_cookies_disabled in the
+  error template, although the WebLogin scripts will work around the
+  absence of that variable.
+
+ -- Russ Allbery <rra@debian.org>  Tue, 08 Jan 2008 16:41:38 -0800
+
+webauth-weblogin (3.5.2-1) unstable; urgency=medium
+
+  Prior versions of the default weblogin templates had a cross-site
+  scripting vulnerability that potentially allowed an attacker to trick
+  users into submitting their username and password to the attacker's
+  site.  This vulnerability has been corrected in the sample templates as
+  of this release, but any templates based on the sample templates should
+  be checked for this vulnerability as well.
+
+  In the templates, replace any instance of:
+
+      <TMPL_VAR NAME=variable>
+
+  with:
+
+      <TMPL_VAR ESCAPE=HTML NAME=variable>
+
+  where "variable" may be any variable name.
+
+ -- Russ Allbery <rra@debian.org>  Thu, 13 Jul 2006 17:56:23 -0700
+
+webauth (3.5.0-1) unstable; urgency=low
+
+  The weblogin template variables have changed significantly with this
+  release, both by renaming existing ones and by adding new ones.  Please
+  read /usr/share/doc/webauth-weblogin/weblogin-config.gz for detailed
+  documentation for both the template variables and the webkdc.conf
+  settings.
+
+ -- Russ Allbery <rra@debian.org>  Wed, 15 Mar 2006 16:55:41 -0800
