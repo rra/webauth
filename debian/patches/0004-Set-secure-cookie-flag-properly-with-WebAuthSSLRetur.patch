@@ -16,7 +16,7 @@ just the former.
  1 file changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/modules/webauth/mod_webauth.c b/modules/webauth/mod_webauth.c
-index e938c91..de2aa1e 100644
+index e938c91..350683c 100644
 --- a/modules/webauth/mod_webauth.c
 +++ b/modules/webauth/mod_webauth.c
 @@ -234,6 +234,7 @@ nuke_cookie(MWA_REQ_CTXT *rc, const char *name, int if_set)
@@ -40,7 +40,7 @@ index e938c91..de2aa1e 100644
  fixup_setcookie(MWA_REQ_CTXT *rc, const char *name, const char *value,
                  const char *path)
  {
-+    bool is_secure = is_https(rc->r) || rc->dconf->ssl_return
++    bool is_secure = is_https(rc->r) || rc->dconf->ssl_return;
 +
      if (path == NULL)
          path = "/";
