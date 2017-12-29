@@ -42,7 +42,7 @@ Build-Depends:
  pkg-config,
 Standards-Version: 4.0.1
 Homepage: https://webauth.stanford.edu/
-Vcs-Git: https://git.eyrie.org/git/kerberos/webauth.git -b debian
+Vcs-Git: https://git.eyrie.org/git/kerberos/webauth.git -b debian/master
 Vcs-Browser: https://git.eyrie.org/?p=kerberos/webauth.git
 
 Package: libapache2-mod-webauth
