@@ -1,0 +1,35 @@
+From: Russ Allbery <eagle@eyrie.org>
+Date: Sun, 26 Apr 2015 18:27:31 -0700
+Subject: Add missing word in generic help for remember checkbox
+
+There was a missing "neither" that made the help documentation
+confusing.  Reported in Debian Bug#783289.
+
+Change-Id: Ie1e3c1201cd3968fdebb592bf9bc86c95df36f79
+---
+ weblogin/templates/help.html | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/weblogin/templates/help.html b/weblogin/templates/help.html
+index 7847a24..08eb606 100644
+--- a/weblogin/templates/help.html
++++ b/weblogin/templates/help.html
+@@ -85,12 +85,12 @@
+       <h2><a name="remember"></a>What if I don't use this machine
+       regularly?</h2>
+ 
+-      <p>Uncheck the check box.  WebLogin will then set up single sign-on
+-      for this browser session nor (if applicable) store any multifactor
+-      authentication information.  Therefore, you will be prompted to log
+-      in the next time you are required to authenticate as though you had
+-      not previously visited a WebAuth-protected site during this web
+-      browser session.</p>
++      <p>Uncheck the check box.  WebLogin will then neither set up single
++      sign-on for this browser session nor (if applicable) store any
++      multifactor authentication information.  Therefore, you will be
++      prompted to log in the next time you are required to authenticate as
++      though you had not previously visited a WebAuth-protected site
++      during this web browser session.</p>
+ 
+       <h2><a name="help"></a>Help! What did I do wrong?</h2>
+ 

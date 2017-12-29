@@ -1,5 +1,9 @@
 webauth (4.7.0-6) UNRELEASED; urgency=medium
 
+  * Set Secure cookie flag properly with WebAuthSSLReturn.
+  * Correctly honor WebKdcTokenMaxTTL for request tokens.
+  * Suppress CGI warnings from using param in list context in WebLogin.
+  * Add missing word in default WebLogin help text.  (Closes: #783289)
   * Update debhelper compatibility level to V11.
     - Remove now-unnecessary explicit dependency on dh-autoreconf.
   * Switch to the DEP-14 branch layout and update debian/gbp.conf and

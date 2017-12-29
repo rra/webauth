@@ -1,0 +1,56 @@
+From: Russ Allbery <eagle@eyrie.org>
+Date: Sun, 9 Aug 2015 10:31:15 -0700
+Subject: Set secure cookie flag properly with WebAuthSSLReturn
+
+If WebAuthSSLReturn is set to true, we may see non-SSL connections
+that are SSL from the perspective of the browser (such as a WebAuth
+server behind an L7 load balancer that does SSL termination).  In
+this case, we still want to set the secure flag on the cookie so that
+the browser properly restricts it to SSL connections.
+
+Trigger setting the secure flag off the combination of whether the
+request is SSL and whether WebAuthSSLReturn is set, rather than
+just the former.
+---
+ modules/webauth/mod_webauth.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/modules/webauth/mod_webauth.c b/modules/webauth/mod_webauth.c
+index e938c91..de2aa1e 100644
+--- a/modules/webauth/mod_webauth.c
++++ b/modules/webauth/mod_webauth.c
+@@ -234,6 +234,7 @@ nuke_cookie(MWA_REQ_CTXT *rc, const char *name, int if_set)
+ {
+     char *cookie;
+     const char *path = "/";
++    bool is_secure = is_https(rc->r) || rc->dconf->ssl_return;
+ 
+     if (if_set && find_cookie(rc, name) == NULL)
+         return;
+@@ -244,7 +245,7 @@ nuke_cookie(MWA_REQ_CTXT *rc, const char *name, int if_set)
+                           "%s=; path=%s; expires=%s;%s",
+                           name, path,
+                           "Thu, 26-Mar-1998 00:00:01 GMT",
+-                          is_https(rc->r) ? "secure" : "");
++                          is_secure ? "secure" : "");
+     if (rc->sconf->debug)
+         ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, rc->r->server,
+                      "mod_webauth: nuking cookie(%s): (%s)",
+@@ -305,6 +306,8 @@ static void
+ fixup_setcookie(MWA_REQ_CTXT *rc, const char *name, const char *value,
+                 const char *path)
+ {
++    bool is_secure = is_https(rc->r) || rc->dconf->ssl_return
++
+     if (path == NULL)
+         path = "/";
+     ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, rc->r->server,
+@@ -317,7 +320,7 @@ fixup_setcookie(MWA_REQ_CTXT *rc, const char *name, const char *value,
+                   name,
+                   value,
+                   path,
+-                  is_https(rc->r) ? "; secure" : "",
++                  is_secure ? "; secure" : "",
+                   rc->sconf->httponly ? "; HttpOnly" : "");
+ }
+ 
