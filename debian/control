@@ -1,7 +1,7 @@
 Source: webauth
 Section: web
 Priority: optional
-Maintainer: Russ Allbery <rra@debian.org>
+Maintainer: Debian QA Group <packages@qa.debian.org>
 Build-Depends:
  apache2-dev (>> 2.4.4-3~),
  debhelper (>= 11),

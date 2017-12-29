@@ -1,5 +1,7 @@
 webauth (4.7.0-6) UNRELEASED; urgency=medium
 
+  * Orphan this package, since I no longer use it and cannot therefore
+    test or maintain it properly.  It has also been orphaned upstream.
   * Set Secure cookie flag properly with WebAuthSSLReturn.
   * Correctly honor WebKdcTokenMaxTTL for request tokens.
   * Suppress CGI warnings from using param in list context in WebLogin.
