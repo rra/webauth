@@ -40,7 +40,7 @@ Build-Depends:
  libxml-parser-perl,
  perl,
  pkg-config,
-Standards-Version: 4.0.1
+Standards-Version: 4.1.3
 Homepage: https://webauth.stanford.edu/
 Vcs-Git: https://git.eyrie.org/git/kerberos/webauth.git -b debian/master
 Vcs-Browser: https://git.eyrie.org/?p=kerberos/webauth.git
