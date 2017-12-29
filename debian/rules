@@ -23,14 +23,14 @@ endif
 PERL_VENDORARCH := $(shell perl -MConfig -e 'print $$Config{vendorarch}')
 
 %:
-	dh $@ --parallel --with apache2,autoreconf
+	dh $@ --parallel --with apache2
 
 override_dh_autoreconf:
 	dh_autoreconf --as-needed
 
 override_dh_auto_configure:
-	dh_auto_configure --parallel -- --libexecdir=/usr/lib \
-	    --enable-webkdc --enable-perl --with-apxs=/usr/bin/apxs \
+	dh_auto_configure --parallel -- --libexecdir=/usr/lib		\
+	    --enable-webkdc --enable-perl --with-apxs=/usr/bin/apxs	\
 	    --enable-reduced-depends
 
 override_dh_auto_install:
@@ -45,7 +45,7 @@ override_dh_installchangelogs:
 
 override_dh_fixperms:
 	dh_fixperms
-	set -e; if [ -d 'debian/libwebkdc-perl/var/cache/weblogin' ] ; then \
+	set -e; if [ -d 'debian/libwebkdc-perl/var/cache/weblogin' ] ; then   \
 	    chown www-data:www-data debian/libwebkdc-perl/var/cache/weblogin; \
 	fi
 
