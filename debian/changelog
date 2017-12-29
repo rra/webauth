@@ -9,6 +9,7 @@ webauth (4.7.0-6) UNRELEASED; urgency=medium
   * Switch to the DEP-14 branch layout and update debian/gbp.conf and
     Vcs-Git accordingly.
   * Update standards version to 4.1.3 (no changes required).
+  * Use https URL in debian/watch.
 
  -- Russ Allbery <rra@debian.org>  Thu, 28 Dec 2017 16:44:29 -0800
 
